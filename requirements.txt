@@ -1,0 +1,9 @@
+langchain
+langchain-openai
+promptfoo
+sentence-transformers
+numpy
+requests
+python-dotenv
+langchain-community
+pypdf

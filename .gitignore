@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+
+# Virtual environments
+venv/
+.env/
+.envrc
+.venv/
+
+# VS Code
+.vscode/
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Test outputs
+htmlcov/
+coverage.xml
+*.cover
+
+# YAML test artifacts
+*.yaml
+
+# Others
+*.sqlite3
+*.db
+
+# Ignore local config
+promptfooconfig.yaml
