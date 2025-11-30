@@ -1,0 +1,15 @@
+tests:
+  - description: Figure extraction example
+    assert:
+      - type: json
+        revenue:
+          type: number
+          value: 500000
+          tolerance: 0.05
+    vars:
+      figures: revenue
+      context: "CompanyY reported revenue of $500,000."
+      query: "Extract figures"
+      post_processor: financial
+    repeats: 3
+    passThreshold: 0.7

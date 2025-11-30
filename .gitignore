@@ -29,12 +29,6 @@ htmlcov/
 coverage.xml
 *.cover
 
-# YAML test artifacts
-*.yaml
-
 # Others
 *.sqlite3
 *.db
-
-# Ignore local config
-promptfooconfig.yaml

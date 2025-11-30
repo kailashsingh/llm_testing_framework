@@ -1,0 +1,14 @@
+tests:
+  - description: Sentiment test example
+    assert:
+      - type: json
+        sentiment_score:
+          type: number
+          value: 0.9
+          tolerance: 0.1
+    vars:
+      context: "This is a great product!"
+      query: "Analyze sentiment"
+      post_processor: sentiment
+    repeats: 5
+    passThreshold: 0.8

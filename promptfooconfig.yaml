@@ -1,0 +1,94 @@
+prompts:
+  - id: analyze_sentiment
+    description: Generic prompt for sentiment analysis
+    text: |
+      Analyze the sentiment of the text as JSON: sentiment_score (0-1 float, higher=more positive).
+      Output only valid JSON.
+
+  - id: extract_figures
+    description: Generic prompt for extraction
+    text: |
+      Extract the following as JSON: {figures}.
+      Output only valid JSON.
+
+providers:
+  - id: langchain
+    config:
+      command: python
+      args:
+        - providers/langchain_provider.py
+    labels:
+      - langchain
+    vars:
+      base_url: ${CUSTOM_LLM_BASE_URL}
+      api_key: ${CUSTOM_LLM_API_KEY}
+      model: default
+      post_processor: default  # Default; override per test
+
+tests:
+  - description: Test sentiment analysis on positive review
+    assert:
+      - type: json
+        sentiment_score:
+          type: number
+          value: 0.8
+          tolerance: 0.2  # Allow ±0.2 variance due to LLM non-determinism
+        sentiment_label:
+          type: equals
+          value: positive  # Exact match on derived label
+    vars:
+      context: |
+        This product is amazing and exceeded expectations! Highly recommend.
+      query: Analyze sentiment
+      post_processor: sentiment  # Use sentiment-specific derivation
+    repeats: 10
+    passThreshold: 0.8
+
+  - description: Test figure extraction (financial example)
+    assert:
+      - type: json
+        revenue:
+          type: number
+          value: 1000000
+      include:
+        - tests/sentiment_tests.yaml
+        - tests/figure_tests.yaml
+        - tests/summary_tests.yaml
+          tolerance: 0.05
+        net_profit:
+          type: number
+          value: 200000
+          tolerance: 0.05
+        profit_margin:
+          type: semdiff
+          value: "Profit margin is approximately 20%"
+          threshold: 0.8
+    vars:
+      figures: revenue, net_profit
+      context: |
+        In 2023, CompanyX reported revenue of $1,000,000 and net profit of $200,000.
+      query: Extract for 2023
+      post_processor: financial
+    repeats: 10
+    passThreshold: 0.8
+
+  - description: Semantic test for summary (non-financial example)
+    assert:
+      - type: semdiff
+        value: "The text discusses positive trends."
+        threshold: 0.7
+    vars:
+      figures: summary
+      context: |
+        The report highlights growth and opportunities.
+      query: Summarize key themes
+      post_processor: default
+    repeats: 5
+    passThreshold: 0.9
+
+defaultTest:
+  repeats: 10
+  passThreshold: 0.8
+  providers: [langchain]
+  vars:
+    post_processor: default

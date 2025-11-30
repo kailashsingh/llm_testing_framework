@@ -1,0 +1,13 @@
+tests:
+  - description: Summary semantic test
+    assert:
+      - type: semdiff
+        value: "The report is positive."
+        threshold: 0.7
+    vars:
+      figures: summary
+      context: "The report highlights positive outcomes."
+      query: "Summarize key points"
+      post_processor: default
+    repeats: 2
+    passThreshold: 0.9
